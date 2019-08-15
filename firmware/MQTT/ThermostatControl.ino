@@ -1,8 +1,8 @@
 /**********************************
 * CalPlug Portable AC Integration
-* ESP32 IR Blaster
+* ThermostatControl
 * 
-* Jigar Hira
+* Jigar Hira & Navid Bazmoon 
 * Fall 2018
 ***********************************/
 
@@ -11,7 +11,9 @@
 #include "Constants.h"	/* Constants */
 #include "Data.h"		/* Data processing */
 #include "NESTSignal.h" /* NEST signal handling */
-
+#include "Publish.h"
+#include "EPROM.h"
+#include "AP.h"
 
 int ISR = 0;  /* Trigger for ISR */
 
@@ -33,18 +35,23 @@ int endMessage[2] = {END_0, END_1};  /* End message - Does not change between co
 
 void setup() {
 
+char epromData[150];
+ MQTTsetup ();
+ EPROMsetup();
+ APsetup(); 
+load_data (epromData);  
+ if (strstr (epromData, "Default") != NULL){
+   
+ }
+ 
   Serial.begin(115200); /* Begin serial monitor */
-
-  /* Power LED */
-  pinMode(PWR_LED, OUTPUT);
-  digitalWrite(PWR_LED, HIGH);
 
   /* Input signals from NEST */
   pinMode(AC, INPUT);
   pinMode(HEAT, INPUT);
   pinMode(FAN, INPUT);
   pinMode(HUMIDIFIER, INPUT);
-  
+
   /* Interrupts */
   attachInterrupt(digitalPinToInterrupt(AC), TriggerISR, CHANGE); /* Sets pin, Interrupt Service Routine (ISR), Trigger */
   attachInterrupt(digitalPinToInterrupt(HEAT), TriggerISR, CHANGE);
@@ -72,11 +79,17 @@ void setup() {
 
 void loop() {
 
+  long long dataForMQTT;  /* Data to send to the MQTT Server */
+
   if (ISR)
   {
+    
     delay(10); /* This is to ensure the digitalRead from the pin is the correct value after the interrupt */
     
-    SendIR(); /* Generates the IR code and sends the signal */
+    dataForMQTT = SendIR(); /* Generates the IR code and sends the signal */
+
+     publishToMQTT(dataForMQTT);
+
 
     ISR = 0;  /* reset ISR variable */     
   }
@@ -93,7 +106,7 @@ void loop() {
 
 
 /* Polls the inputs and generates IR command code. Then sends the command via RMT library */
-void SendIR()
+long long SendIR()
 {
   /* reads the current input values and generates an IR code to send */
   data = GenerateIRCode(digitalRead(AC), digitalRead(HEAT), digitalRead(FAN), digitalRead(HUMIDIFIER));
@@ -108,7 +121,8 @@ void SendIR()
 
   /* Logs to serial monitor */
   Serial.println("Message Sent");
-  
+
+  return data;
 }
 
 

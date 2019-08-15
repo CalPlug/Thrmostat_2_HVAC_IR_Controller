@@ -20,25 +20,25 @@ long long GenerateIRCode(int Y, int W, int G, int X)
 	bytes[1] = BYTE_3;
 	bytes[4] = ADDRESS;	/* address byte is always the same */
 	
-	if (Y == 0)	/* AC is on */
+	if (!Y == 1)	/* AC is on */
 	{
 		bytes[2] = MODE_AC;	/* AC mode */
 		bytes[3] = TEMP_64;	/* 64 degrees F */
 				
 	}
-	else if (W == 0)	/* HEAT is on */
+	else if (!W == 1)	/* HEAT is on */
 	{
 		bytes[2] = MODE_HEAT;	/* HEAT mode */
 		bytes[3] = TEMP_81;	/* 81 degrees F */
     
 	}
-	else if (G == 0)	/* FAN is on */
+	else if (!G == 1)	/* FAN is on */
 	{
 		bytes[2] = MODE_FAN;	/* FAN mode */
 		bytes[3] = TEMP_64_MEDFAN;	/* 64 degrees F (MED FAN) */
 
 	}
-	else if (X == 0)	/* HUMIDIFIER is on */
+	else if (!X == 1)	/* HUMIDIFIER is on */
 	{
 		bytes[2] = MODE_HUMIDIFIER;	/* HUMIDIFIER mode */
 		bytes[3] = TEMP_64;	/* 64 degrees F */

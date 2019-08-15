@@ -1,4 +1,7 @@
 # ThermostatControl
+Jigar Hira
+Navid Bazmoon
+
 Code to interface the NEST thermostat with ESP32
 
 Utilizes the RMT ESP32 library to send IR signals controlling a portable AC unit.

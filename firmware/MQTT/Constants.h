@@ -15,12 +15,11 @@
 
 
 /* Pin Definitions */
-#define PWR_LED       GPIO_NUM_16
-#define IR_LED        GPIO_NUM_27
-#define AC            GPIO_NUM_32
-#define HEAT          GPIO_NUM_33
+#define IR_LED        GPIO_NUM_21
+#define AC            GPIO_NUM_27
+#define HEAT          GPIO_NUM_26
 #define FAN           GPIO_NUM_25
-#define HUMIDIFIER    GPIO_NUM_26
+#define HUMIDIFIER    GPIO_NUM_33
 
 
 /* IR CODE SETTINGS */
